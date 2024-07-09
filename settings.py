@@ -8,7 +8,7 @@ SECRET_KEY = 'your-secret-key'
 
 DEBUG = True
 
-# Allow connections from your machine's local network IP and your mobile device
+
 ALLOWED_HOSTS = ['127.0.0.1', '10.0.2.2', '192.168.41.113']
 
 INSTALLED_APPS = [
@@ -119,9 +119,9 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # Your React Native bundler address
-    'exp://192.168.41.113:8081',  # Adjust this to the Expo URL
-    'http://192.168.1.100',  # Your local IP (example)
+    'http://localhost:3000', 
+    'exp://192.168.41.113:8081',  #This url will be changed as EXPO url
+    'http://192.168.1.100',  
 ]
 CORS_ALLOW_CREDENTIALS = True
 
