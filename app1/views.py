@@ -14,7 +14,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-
+# Get the user model to handle authentication and user creation
 User = get_user_model()
 
 @api_view(['POST'])
