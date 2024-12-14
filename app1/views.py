@@ -22,9 +22,11 @@ def login_view(request):
     if request.method == 'POST':
         username = request.data.get('username')
         password = request.data.get('password')
+        # Authenticate the user using Django's built-in authentication system
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
+            login(request, user) # Logs the user in
+            # Generate refresh and access tokens
             refresh = RefreshToken.for_user(user)
             return Response({
                 'refresh': str(refresh),
@@ -32,6 +34,7 @@ def login_view(request):
                 'success': 'Login successful'
             })
         else:
+            # Return error if authentication fails
             return Response({'error': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
@@ -39,13 +42,17 @@ def register_view(request):
     username = request.data.get('username')
     password = request.data.get('password')
     if not username or not password:
+        # Verify that both fields are provided
         return Response({'error': 'Username and password are required'}, status=status.HTTP_400_BAD_REQUEST)
     if User.objects.filter(username=username).exists():
+        # Check if the username is already taken
         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        # Create the user with the provided username and password
     user = User.objects.create_user(username=username, password=password)
     if user:
         return Response({'success': 'User created successfully'}, status=status.HTTP_201_CREATED)
     else:
+        # Handle unexpected user creation failures
         return Response({'error': 'Failed to create user'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -63,7 +70,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        # Add custom claims
+        # Add custom claims to the taken (e.g, username)
         token['username'] = user.username
         return token
 
@@ -74,8 +81,10 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class MyTokenObtainPairView(APIView):
     def post(self, request, *args, **kwargs):
+        # Get username and password from request
         username = request.data.get('username')
         password = request.data.get('password')
+        # Authenticate the user
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
@@ -96,15 +105,18 @@ class MyTokenObtainPairView(APIView):
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
+         # Authenticate the user
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
+            # Generate refresh and access tokens
             refresh = RefreshToken.for_user(user)
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
             })
         else:
+            # Return error for invalid credentials
             return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
