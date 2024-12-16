@@ -15,23 +15,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 # app1/urls.py
-
+# Import necessary modules and views
 from django.contrib import admin
 from django.urls import path, include
-from app1 import views
+from app1 import views # Import views from app1
 from app1.views import google_oauth_login, google_oauth_callback
 from app1.views import MyTokenObtainPairView
 
 
-
+# Define URL patterns
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/login/', views.login_view, name='api_login'),
-    path('api/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/register/', views.register_view, name='api_register'),
+    path('admin/', admin.site.urls), # Admin site URL
+    path('api/login/', views.login_view, name='api_login'), # API endpoint for login (custom view)
+    path('api/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),# JWT token endpoint
+    path('api/register/', views.register_view, name='api_register'), # API endpoint for user registration
     path('login/google/', google_oauth_login, name='google_oauth_login'),
-    path('complete/google-oauth2/', google_oauth_callback, name='google_oauth_callback'),
-    path('auth/', include('social_django.urls', namespace='social')), 
+    path('complete/google-oauth2/', google_oauth_callback, name='google_oauth_callback'), # Callback URL after Google login
+    path('auth/', include('social_django.urls', namespace='social')), # Include URLs for social authentication
     
 ]
 
